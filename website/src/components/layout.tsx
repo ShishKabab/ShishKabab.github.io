@@ -9,12 +9,16 @@ import React from "react"
 import styled from "styled-components"
 import { Link } from "gatsby"
 
-import "@fontsource/open-sans"
-import "@fontsource/lato"
+import "@fontsource/open-sans/300.css"
+import "@fontsource/open-sans/300-italic.css"
+import "@fontsource/open-sans/700.css"
+import "@fontsource/lato/700.css"
 import "../global.css"
 
 const StyledLayout = styled.div`
   font-family: "Open Sans", sans-serif;
+  font-size: 18px;
+  color: #000;
 
   h1, h2, h3 {
     font-family: "Lato", sans-serif;

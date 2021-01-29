@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import ExternalLink from "../components/external-link"
+import Heading from "../components/heading"
 // import { Link } from "gatsby"
 
 import Layout from "../components/layout"
@@ -16,7 +17,7 @@ const IndexPage = () => (
   <Layout>
     <SEO title="Home" />
     <IntroBox>
-    <h1>Hey, I'm Vincent</h1>
+    <Heading>Hey, I'm Vincent</Heading>
     <p>
     I like to build things and try to focus on things that can generate systemic change, such as collective intelligence, education, art and rethinking the way we think about problems.
     </p>
