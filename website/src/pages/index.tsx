@@ -5,6 +5,7 @@ import Heading from "../components/heading"
 // import { Link } from "gatsby"
 
 import Layout from "../components/layout"
+import Paragraph from "../components/paragraph"
 import SEO from "../components/seo"
 
 const IntroBox = styled.div`
@@ -17,13 +18,21 @@ const IndexPage = () => (
   <Layout>
     <SEO title="Home" />
     <IntroBox>
-    <Heading>Hey, I'm Vincent</Heading>
-    <p>
-    I like to build things and try to focus on things that can generate systemic change, such as collective intelligence, education, art and rethinking the way we think about problems.
-    </p>
-    <p>
-    Most of my time doing this is currently spent doing web development as CTO at <ExternalLink href="https://www.worldbrain.io/">Worldbrain.io</ExternalLink>, but also collecting, digesting and integrating ideas on these topics that I find on the web and through my circle of friends.
-    </p>
+      <Heading>Hey, I'm Vincent</Heading>
+      <Paragraph>
+        I like to build things and try to focus on things that can generate
+        systemic change, such as collective intelligence, education, art and
+        rethinking the way we think about problems.
+      </Paragraph>
+      <Paragraph>
+        Most of my time doing this is currently spent doing web development as
+        CTO at{" "}
+        <ExternalLink href="https://www.worldbrain.io/">
+          WorldBrain.io
+        </ExternalLink>
+        , but also collecting, digesting and integrating ideas on these topics
+        that I find on the web and through my circle of friends.
+      </Paragraph>
     </IntroBox>
   </Layout>
 )

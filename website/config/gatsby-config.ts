@@ -1,3 +1,5 @@
+import * as path from 'path'
+
 module.exports = {
     siteMetadata: {
         title: `Vincent den Boer`,
@@ -13,18 +15,31 @@ module.exports = {
                 path: `${__dirname}/../src/images`,
             },
         },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `images`,
+                path: `${__dirname}/../src/pages`,
+            },
+        },
         `gatsby-transformer-sharp`,
         `gatsby-plugin-sharp`,
         {
+            resolve: 'gatsby-plugin-mdx',
+            options: {
+                defaultLayouts: {
+                    default: path.resolve(__dirname, '../src/components/layout-markdown.tsx')
+                }
+            }
+        },
+        {
             resolve: `gatsby-plugin-manifest`,
             options: {
-                name: `gatsby-starter-default`,
-                short_name: `starter`,
+                name: `vincent-den-boer`,
                 start_url: `/`,
                 background_color: `#663399`,
                 theme_color: `#663399`,
                 display: `minimal-ui`,
-                icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
             },
         },
         {
