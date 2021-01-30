@@ -20,26 +20,42 @@ const ArticleLink = styled(Link)`
 
 const ThoughtsIndex = (props: any) => {
   console.log(props)
+  const { edges } = props.data.allMdx
+  const items = (edges as any[])
+    .filter(edge => {
+      const { slug } = edge.node
+      return ("/" + slug).startsWith(props.path)
+    })
+    .map(edge => {
+      const { node } = edge
+      const { frontmatter } = node
+      const createdWhen = new Date(frontmatter.createdWhen)
+      return {
+        createdWhen,
+        slug: node.slug as string,
+        title: frontmatter.title as string,
+        preview: frontmatter.preview as string,
+      }
+    })
+  items.sort((left, right) => {
+    return left.createdWhen.getTime() < right.createdWhen.getTime() ? 1 : -1
+  })
   return (
     <Layout>
       <PageTitle>Thoughts in progress</PageTitle>
       <Paragraph>
         Here I collect things I'm thinking about and may grow into articles over
-        time.
+        time, so I can collect feedback from other people and generate
+        discussion as I reseach these topics.
       </Paragraph>
       <ArticleList>
-        {props.data.allMdx.edges.map((edge: any) => {
-          const { node } = edge
-          const { slug, frontmatter } = node
-          if (!("/" + slug).startsWith(props.path)) {
-            return null
-          }
+        {items.map(item => {
           return (
-            <Margin key={slug} bottom="medium">
+            <Margin key={item.slug} bottom="medium">
               <Article
-                slug={slug}
-                title={frontmatter.title}
-                preview={frontmatter.preview}
+                slug={item.slug}
+                title={item.title}
+                preview={item.preview}
               />
             </Margin>
           )
@@ -71,6 +87,7 @@ export const query = graphql`
           frontmatter {
             title
             preview
+            createdWhen
           }
         }
       }

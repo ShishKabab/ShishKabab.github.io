@@ -20,9 +20,11 @@ const IndexPage = () => (
     <IntroBox>
       <Heading>Hey, I'm Vincent</Heading>
       <Paragraph>
-        I like to build things and try to focus on things that can generate
+        I like to build things and try to focus on projects that can generate
         systemic change, such as collective intelligence, education, art and
-        rethinking the way we think about problems.
+        rethinking the way we think about problems. Feel free to reach to me on
+        any of these to provide different perspectives, spot errors in
+        reasoning, suggest other interesting topics, etc.
       </Paragraph>
       <Paragraph>
         Most of my time doing this is currently spent doing web development as
