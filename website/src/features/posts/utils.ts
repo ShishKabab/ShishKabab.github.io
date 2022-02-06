@@ -5,7 +5,6 @@ export function getPostsFromQuery(props: any) {
     const items = (edges as any[])
         .filter(edge => {
             const { slug } = edge.node
-            console.log("/" + slug, props.path)
             return ("/" + slug).startsWith(props.path)
         })
         .map(edge => {
