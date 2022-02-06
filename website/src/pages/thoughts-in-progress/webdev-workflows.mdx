@@ -8,11 +8,17 @@ preview: |
   Web development has gone through many technological iterations. Here I ask questions about what we'd want from an ideal experience, not only from the perspective of developers, but for the entire organization. And, there's some thoughts on how to get there.
 ---
 
-- Some basic considerations
+- What do we want to improve?
 
   - Feedback loop: how can we reduce the time needed from changing code, data or assets, to seeing the result on screen?
 
-    - Do I have any manual actions to repeat?
+    - Do I have any manual actions to repeat every time I change my code?
+
+    - How much work is it to switch between features I'm working on?
+
+      - Do I need to set up test data, accounts, etc.?
+
+      - How many services do I need to start and restart between work contexts?
 
     - How many different UI states do I need to check for a single action?
 
@@ -21,6 +27,12 @@ preview: |
   - Developers are not the only ones working on the product
 
     - How can we show the progress we're making as quickly as possible with minimal effort both to safely publish and to view changes?
+
+    - How can I reduce bottlenecks for the rest of the organization to make changes that shouldn't involve developers?
+
+      - Gathering new types of analytics should not depend on developers.
+
+      - Changing and validating the visual designs should not depend on developers.
 
     - How can we relate different parts of the program to other parts of the organization?
 
@@ -33,3 +45,9 @@ preview: |
       - How easily can I understand user behavior?
 
       - How can I see in which context which data is queried how and why?
+
+  - The resulting user experience should be fast
+
+    - Pages should load as quickly as possible
+
+    - The UI should run efficiently, generate as little system load as possible and respond quickly to user input (including scrolling)

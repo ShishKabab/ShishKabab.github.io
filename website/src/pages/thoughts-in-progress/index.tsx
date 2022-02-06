@@ -19,7 +19,6 @@ const ArticleLink = styled(Link)`
 `
 
 const ThoughtsIndex = (props: any) => {
-  console.log(props)
   const { edges } = props.data.allMdx
   const items = (edges as any[])
     .filter(edge => {
