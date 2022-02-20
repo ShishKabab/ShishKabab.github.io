@@ -1,7 +1,6 @@
 import React from "react"
 import Highlight, { defaultProps } from "prism-react-renderer"
 import theme from "prism-react-renderer/themes/github"
-const Prism = require("prism-react-renderer/prism")
 
 export default function CodeBlock(props: { children: any }) {
     const className = props.children.props.className || ""

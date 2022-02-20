@@ -7,6 +7,7 @@ module.exports = {
         author: `@vince_d_boer`,
     },
     plugins: [
+        `gatsby-remark-images`,
         `gatsby-plugin-react-helmet`,
         {
             resolve: `gatsby-source-filesystem`,
@@ -29,7 +30,15 @@ module.exports = {
             options: {
                 defaultLayouts: {
                     default: path.resolve(__dirname, '../src/components/layout-markdown.tsx')
-                }
+                },
+                gatsbyRemarkPlugins: [
+                    {
+                        resolve: `gatsby-remark-images`,
+                        options: {
+                            maxWidth: 1200,
+                        },
+                    },
+                ],
             }
         },
         {

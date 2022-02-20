@@ -15,6 +15,7 @@ export function getPostsFromQuery(props: any) {
                 createdWhen,
                 slug: node.slug as string,
                 title: frontmatter.title as string,
+                publishedWhen: frontmatter.publishedWhen as any,
                 preview: frontmatter.preview as string,
             }
         })
@@ -33,7 +34,7 @@ export const allPostsQuery = graphql`
                 frontmatter {
                     title
                     preview
-                    createdWhen
+                    publishedWhen
                 }
             }
         }

@@ -8,6 +8,7 @@ import CodeBlock from "./code-block"
 
 export default function MarkdownLayout(props: {
     children: React.ReactNode
+    path: string
     pageContext: any
 }) {
     return (
@@ -16,7 +17,7 @@ export default function MarkdownLayout(props: {
             <MDXProvider
                 components={{
                     h1: props => <Heading level={1}>{props.children}</Heading>,
-                    h2: props => <Heading level={3}>{props.children}</Heading>,
+                    h2: props => <Heading level={2}>{props.children}</Heading>,
                     h3: props => <Heading level={3}>{props.children}</Heading>,
                     p: props => <Paragraph>{props.children}</Paragraph>,
                     pre: CodeBlock,
@@ -36,6 +37,10 @@ export default function MarkdownLayout(props: {
                     ) {
                         return child
                     }
+                    if (!props.path.startsWith("/thoughts-in-progress/")) {
+                        return child
+                    }
+                    console.log(props)
 
                     let key = 0
                     const parsed = parseMdxListRoot(child, () => `${key++}`)

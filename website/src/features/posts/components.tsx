@@ -32,11 +32,13 @@ export const PostIndex = (props: {
             {props.description && <Paragraph>{props.description}</Paragraph>}
             <ArticleList>
                 {items.map(item => {
+                    const published = new Date(item.publishedWhen)
                     return (
                         <Margin key={item.slug} bottom="medium">
                             <PostPreview
                                 slug={item.slug}
                                 title={item.title}
+                                publishedWhen={published}
                                 preview={item.preview}
                             />
                         </Margin>
@@ -50,8 +52,15 @@ export const PostIndex = (props: {
 export const PostPreview = (props: {
     slug: string
     title: string
+    publishedWhen: Date
     preview: React.ReactNode
 }) => {
+    const publishedString = props.publishedWhen.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    })
     return (
         <ArticleLink to={`/${props.slug}`}>
             <Heading level={2}>{props.title}</Heading>

@@ -16,6 +16,7 @@ export const query = graphql`
                         title
                         preview
                         createdWhen
+                        publishedWhen
                     }
                 }
             }
