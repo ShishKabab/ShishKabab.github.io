@@ -8,6 +8,7 @@ import Heading from "../../components/heading"
 import Layout from "../../components/layout"
 import PageTitle from "../../components/page-title"
 import Paragraph from "../../components/paragraph"
+import Subtitle from "../../components/subititle"
 import { getPostsFromQuery } from "../../features/posts/utils"
 
 const ArticleList = styled.div`
@@ -64,6 +65,9 @@ export const PostPreview = (props: {
     return (
         <ArticleLink to={`/${props.slug}`}>
             <Heading level={2}>{props.title}</Heading>
+            <Margin bottom="large">
+                <Subtitle>{publishedString}</Subtitle>
+            </Margin>
             <Paragraph>{props.preview}</Paragraph>
         </ArticleLink>
     )

@@ -12,6 +12,7 @@ const spacing: { [Key in SpacingValue]: string } = {
 export const THEME = {
     spacing,
     colors: {
-        primary: 'red',
+        primary: '#333',
+        subtitle: '#888'
     }
 }

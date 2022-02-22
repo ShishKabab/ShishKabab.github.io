@@ -88,7 +88,7 @@ const Layout = (props: { children: React.ReactNode }) => {
 
 const HeaderMenuItem = (props: { to: string; children: string }) => {
     return (
-        <Margin left="largest">
+        <Margin right="largest">
             <HeaderMenuLink to={props.to}>{props.children}</HeaderMenuLink>
         </Margin>
     )
