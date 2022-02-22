@@ -60,7 +60,6 @@ export default class AnimationFrames extends React.Component<
 > {
     mounted = false
     frameImages?: HTMLImageElement
-    loading: Promise<void>
 
     constructor(props: AnimationFramesProps) {
         super(props)
@@ -70,14 +69,14 @@ export default class AnimationFrames extends React.Component<
             playing: false,
             loaded: false,
         }
-        this.loading = preloadImages(props.frames.slice(0, 1))
-            .then(() => preloadImages(props.frames.slice(1)))
-            .then(() => {})
     }
 
     async componentDidMount() {
+        const { props } = this
         this.mounted = true
-        await this.loading
+        await preloadImages(props.frames.slice(0, 1))
+            .then(() => preloadImages(props.frames.slice(1)))
+            .then(() => {})
         this.setState({
             loaded: true,
         })

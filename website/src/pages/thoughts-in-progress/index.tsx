@@ -1,6 +1,6 @@
+import { graphql } from "gatsby"
 import React from "react"
 import { PostIndex } from "../../features/posts/components"
-import { allPostsQuery } from "../../features/posts/utils"
 
 const ThoughtIndex = (props: any) => {
     return (
@@ -18,6 +18,22 @@ const ThoughtIndex = (props: any) => {
     )
 }
 
-export const query = allPostsQuery
+export const query = graphql`
+    {
+        allMdx {
+            edges {
+                node {
+                    slug
+                    frontmatter {
+                        title
+                        preview
+                        createdWhen
+                        publishedWhen
+                    }
+                }
+            }
+        }
+    }
+`
 
 export default ThoughtIndex
