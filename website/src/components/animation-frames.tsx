@@ -60,6 +60,7 @@ export default class AnimationFrames extends React.Component<
 > {
     mounted = false
     frameImages?: HTMLImageElement
+    doFrameTimeout?: ReturnType<typeof setTimeout>
 
     constructor(props: AnimationFramesProps) {
         super(props)
@@ -104,6 +105,9 @@ export default class AnimationFrames extends React.Component<
     }
 
     pausePlay() {
+        if (this.doFrameTimeout) {
+            clearTimeout(this.doFrameTimeout)
+        }
         this.setState({
             playing: false,
         })
@@ -123,7 +127,7 @@ export default class AnimationFrames extends React.Component<
                 ? this.props.playSpeed ?? DEFAULT_PLAY_SPEED
                 : this.props.loopPause ?? DEFAULT_LOOP_PAUSE
 
-        setTimeout(this.doFrame, timeoutMs)
+        this.doFrameTimeout = setTimeout(this.doFrame, timeoutMs)
     }
 
     render() {
