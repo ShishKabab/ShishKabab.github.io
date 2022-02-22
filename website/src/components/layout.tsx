@@ -19,8 +19,9 @@ import { Margin } from "styled-components-spacing"
 
 const StyledLayout = styled.div`
     font-family: "Open Sans", sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     color: #000;
+    line-height: 150%;
 
     h1,
     h2,

@@ -64,10 +64,9 @@ export const PostPreview = (props: {
     })
     return (
         <ArticleLink to={`/${props.slug}`}>
-            <Heading level={2}>{props.title}</Heading>
-            <Margin bottom="large">
-                <Subtitle>{publishedString}</Subtitle>
-            </Margin>
+            <Heading level={2} subtext={publishedString}>
+                {props.title}
+            </Heading>
             <Paragraph>{props.preview}</Paragraph>
         </ArticleLink>
     )
