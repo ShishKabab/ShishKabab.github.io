@@ -24,21 +24,46 @@ const IndexPage = () => (
         <IntroBox>
             <Heading>Hey, I'm Vincent</Heading>
             <Paragraph>
-                I like to build things and try to focus on projects that can
-                generate systemic change, such as collective intelligence,
-                education, art and rethinking the way we think about problems.
-                Feel free to reach to me on any of these to provide different
-                perspectives, spot errors in reasoning, suggest other
-                interesting topics, etc.
+                I help people and organizations to build digital products that
+                can continue to adapt quickly as they grow. By using the right
+                tools and techniques fitting the context of teams and the
+                problems they're solving, I'm obsessed with bringing joy and
+                excitement to people working together to bring something useful
+                into the world!
             </Paragraph>
             <Paragraph>
-                Most of my time doing this is currently spent doing web
-                development as CTO at{" "}
-                <ExternalLink href="https://www.worldbrain.io/">
-                    WorldBrain.io
+                What does that look like? Over the last years, I've helped
+                WorldBrain to build{" "}
+                <ExternalLink href="https://memex.garden/">Memex</ExternalLink>,
+                setting up in such a way that with a 2-developer team we were
+                able to
+                <ol>
+                    <li>
+                        launch an elegant, simple and privacy-focused database
+                        sync mechanism
+                    </li>
+                    <li>
+                        transition the whole product from local-first to
+                        cloud-based in a very short time-frame
+                    </li>
+                    <li>
+                        transition a big chunk of business logic from the
+                        browser extension to the mobile app
+                    </li>
+                    <li>
+                        develop forward-thinking development workflows that
+                        allowed easy outsourcing of styling work and reduce
+                        daily iteration times.
+                    </li>
+                </ol>
+            </Paragraph>
+            <Paragraph>
+                Want to talk?{" "}
+                <ExternalLink href="https://twitter.com/vince_d_boer">
+                    {" "}
+                    Connect with me on Twitter
                 </ExternalLink>
-                , but also collecting, digesting and integrating ideas on these
-                topics that I find on the web and through my circle of friends.
+                !
             </Paragraph>
         </IntroBox>
     </Layout>
