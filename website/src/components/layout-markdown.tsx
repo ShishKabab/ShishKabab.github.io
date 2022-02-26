@@ -11,9 +11,18 @@ export default function MarkdownLayout(props: {
     path: string
     pageContext: any
 }) {
+    const publishedWhen = new Date(props.pageContext.frontmatter.publishedWhen)
+    const publishedString = publishedWhen.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    })
     return (
         <Layout>
-            <Heading level={1}>{props.pageContext.frontmatter.title}</Heading>
+            <Heading level={1} subtext={publishedString}>
+                {props.pageContext.frontmatter.title}
+            </Heading>
             <MDXProvider
                 components={{
                     h1: props => <Heading level={1}>{props.children}</Heading>,

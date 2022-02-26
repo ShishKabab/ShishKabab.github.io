@@ -9,7 +9,7 @@ import Paragraph from "../components/paragraph"
 import SEO from "../components/seo"
 
 const IntroBox = styled.div`
-    margin: 200px 0;
+    margin: 100px 0;
     width: 100%;
     max-width: 400px;
 
@@ -39,8 +39,8 @@ const IndexPage = () => (
                 able to
                 <ol>
                     <li>
-                        launch an elegant, simple and privacy-focused database
-                        sync mechanism
+                        launch an elegant, simple and privacy-focused
+                        multi-client database sync mechanism
                     </li>
                     <li>
                         transition the whole product from local-first to
