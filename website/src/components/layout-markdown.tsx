@@ -5,22 +5,18 @@ import Heading from "./heading"
 import Paragraph from "./paragraph"
 import ToggleList, { ToggleListItem } from "./toggle-list"
 import CodeBlock from "./code-block"
+import { getPostHeaderSubtext } from "../utils"
 
 export default function MarkdownLayout(props: {
     children: React.ReactNode
     path: string
     pageContext: any
 }) {
-    const publishedWhen = new Date(props.pageContext.frontmatter.publishedWhen)
-    const publishedString = publishedWhen.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    })
+    const { frontmatter } = props.pageContext
+    console.log(props.pageContext)
     return (
         <Layout>
-            <Heading level={1} subtext={publishedString}>
+            <Heading level={1} subtext={getPostHeaderSubtext(frontmatter)}>
                 {props.pageContext.frontmatter.title}
             </Heading>
             <MDXProvider

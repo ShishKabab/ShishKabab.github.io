@@ -1,0 +1,118 @@
+---
+createdWhen: 2022-03-02
+title: What you need to get scenario replays in your product
+preview: TBD
+---
+
+In [the previous article](/blog/scenario-replays) in this series, I explained what scenario replays are and how they can increase development speed and improve collaboration and communication across teams. Now, it’s time to explain what’s needed to get them to work in a web application assuming a lot of the logic is client side. There’s many variations on this depending on what combination of technologies you’re using. So instead of trying to dive into technology-specific details, I’ll start in this article with a high-level overview.
+
+# What is a scenario replay, really?
+
+The goal of a scenario replay is to be able to jump to any specific point in any of the workflows in your product. This means _a scenario replay is a description of two parts_: 1) setting up the right pre-conditions and 2) being able to lay out a sequence of steps that should happen after that. Some of the pre-conditions you’ll want to be able to modify at the start of each scenario are:
+
+-   **Data sets: **what data do I want to be loaded in the backend before loading the frontend? This also includes data like registered users and their profiles. It may live in one database, or multiple systems, but you’ll want to have a way of easily starting with an empty dataset and only inserting the data you’ll need for the scenario.
+-   **Authentication: **who am I logged in as (if anyone) before starting the UI and replaying steps? It may also be that while you’re setting up the scenario, you’ll switch between multiple users. For example, user A subscribes to a feed, user B posts something to that feed, then the UI is shown as user A.
+-   **Starting point: **which screen or URL is the first place the scenario navigates to?
+-   **Other edges of the system: **what are the other things you want to modify for the scenario to reproduce exactly the result you want? Are there any cookies or local storage keys that need to be present? Do you want to fake a certain device type with a specific screen width? Is there some state in the application that remembers previous pages you navigated from in order to display breadcrumbs? This all depends on your exact business requirements.
+
+Then, we’ll need to be able to execute steps. Each step can do any of these things:
+
+-   **Set up per-step preconditions: **most notably, if you want to be able to jump to specific loading or error states, this is the place where you can block and sabotage certain parts of your program, or reverse these things later. One step might show a loading screen, while a next step shows what happens when the loading is done.
+-   **Wait for some condition to be met: **you might want to execute this step only once the page is fully loaded, or only some part of it. Or, you started a process in one step, which completes several steps later. An example is an unauthenticated user trying to post a reply, which initiates a login/registration flow, during which the user fills in different fields a clicks submit. The reply submission as a whole waits for this and afterwards you want to show what happens after the reply is successfully submitted.
+-   **Trigger a UI action: **this is where you fill in fields, press buttons, move sliders, etc. automatically. Implicit in this may be that the step knows it’s finished once the UI action finishes, e.g. a button press triggering an async process returning a Javascript promise.
+
+# Describing a scenario
+
+Now how does this translate to code? There’s a choice to make here. If you choose to write your scenario as code, you’ll have more flexibility in expressing how you want to set up your pre-conditions and what should happen during each step. However, if you want to be able to record scenarios from actual user input (so you can use them to generate links you can attach to bug reports), you’ll want to be able to easily serialize them. In this case, each scenario can be described as a data structure, like JSON. The downside of this is losing the flexibility of code. For every different category of actions you need to take, you now need to write some code that can interpret it. The options here are writing them in code, making them data-driven or a hybrid, each with their own complexity, effort and maintenance trade-offs.
+
+Writing them as code might look something like this (untyped Javascript for simplicity):
+
+```ts
+const addTodoItem = () => ({
+    setup: async app => {
+        await app.loadData({
+            users: ["default-user"],
+            todoLists: [
+                {
+                    name: "house-chores",
+                    user: "default-user",
+                },
+            ],
+        })
+        await app.authentiateAs("default-user")
+        await app.blockPromise(app.storage, "getTodoList")
+        await app.navigateTo({
+            route: "todo-list",
+            listId: "house-chores",
+        })
+    },
+    steps: {
+        loading: async app => {
+            await app.waitFor("todo-list", "startedLoading")
+        },
+        loaded: async app => {
+            await app.unblockPromise(app.storage, "getTodoList")
+            await app.waitFor("todo-list", "finishedLoading")
+        },
+        addedItem: async app => {
+            await app.triggerAction("todo-list", "addItem", {
+                label: "Wash dishes",
+            })
+            await app.waitFor("todo-list", "addedItem")
+        },
+    },
+})
+```
+
+Whereas the same as a data structure might look like this:
+
+```json
+{
+    "data": {
+        "users": ["default"],
+        "todoLists": [{ "name": "house-chores", "user": "default" }]
+    },
+    "user": "default",
+    "start": { "route": "todo-list", "listId": "house-chores" },
+    "steps": {
+        "loading": [
+            { "blockPromise": "app.storage.getTodoList" },
+            { "waitFor": ["todo-list", "startedLoading"] }
+        ],
+        "loaded": [
+            { "unblockPromise": "app.storage.getTodoList" },
+            { "waitFor": ["todo-list", "finishedLoading"] }
+        ],
+        "addedItem": [
+            {
+                "triggerAction": {
+                    "target": "todo-list",
+                    "eventName": "addItem",
+                    "eventArgs": {
+                        "label": "Wash dishes"
+                    }
+                }
+            },
+            { "waitFor": ["todo-list", "addedItem"] }
+        ]
+    }
+}
+```
+
+# Getting the scenario to run
+
+Now that you know what to describe in each scenario, you’ll need some way of replaying (and ideally recording) them. The specifics of how to do everything to make that happen depend on your specific codebase and could be nice subjects for future articles. On a high-level you’ll need:
+
+-   Some way of **recognizing you’re running the application with a scenario**. This may be with a special URL, or an action in a UI. Once you detect this, you can look up the right scenarios and set up the right pre-condition.
+-   Being able to **run your program with a clean slate**. This means cleared sessions, an empty database and any other cleared side-effects your program generates while running.
+-   **Isolating the edges of your system**. You’ll want to set up your program so you can control any systems your UI interacts with, such as the authentication mechanism so you can create and impersonate fake users, or external services such as Mailchip so you can test mailing list subscription.
+-   **Initialization of pre-conditions. **Loading the right data into the database, local storage, and mocked out services like Mailchimp. Also, information gotten from browser APIs such as device width, etc. And, starting the UI at the right screen/URL.
+-   Being able to **trigger UI actions and wait for conditions to be completed**. This needs a central point where you can dispatch UI actions, no matter the screen you’re on. Also, conditions to wait for could be dispatched through this central point.
+-   Bonus: being able to **block and sabotage different parts of your program** to reproduce loading and error states. This might be done by having your entire program as one (nested) object of which you can monkey patch certain parts on the fly.
+-   Bonus: being able to **record and serialize UI actions:** This requires another central point through which all UI actions flow, which receives _serializable actions_ to record and execute. This excludes opaque non-serializable structures, like Redux’ thunks, which are function calls that the program cannot inspect. Instead, you need data like `{ target: ‘todo-list, eventType: ‘deleteItem’, eventArgs: { id: 123 } }`
+
+# What’s next?
+
+I’ll dive into the most interesting aspects of some of these complexities one by one as part of the _scenario replays and cross-team collaboration_ series. If you want to receive articles as they come out, you can subscribe to the series by joining the mailing list.
+
+Also, I’m creating a boilerplate that shows how to integrate all of these concepts and more in a real code setup. I’m still figuring out what it’s price should be, but I’m thinking of €500. Interested? Join the waiting list and send me your feedback and ideas!

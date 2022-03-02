@@ -4,7 +4,11 @@ export function getPostsFromQuery(props: any) {
     const { edges } = props.data.allMdx
     const items = (edges as any[])
         .filter(edge => {
-            const { slug } = edge.node
+            const { node } = edge
+            const { slug, frontmatter } = node
+            if (!frontmatter?.publishedWhen) {
+                return false
+            }
             return ("/" + slug).startsWith(props.path)
         })
         .map(edge => {
@@ -19,8 +23,10 @@ export function getPostsFromQuery(props: any) {
                 preview: frontmatter.preview as string,
             }
         })
-    items.sort((left, right) => {
-        return left.createdWhen.getTime() < right.createdWhen.getTime() ? 1 : -1
+    items.sort((leftItem, rightItem) => {
+        const lhs = leftItem.publishedWhen ?? leftItem.createdWhen
+        const rhs = rightItem.publishedWhen ?? rightItem.createdWhen
+        return lhs.getTime() < rhs.getTime() ? 1 : -1
     })
     return items
 }
@@ -34,6 +40,7 @@ export const allPostsQuery = graphql`
                 frontmatter {
                     title
                     preview
+                    createdWhen
                     publishedWhen
                 }
             }

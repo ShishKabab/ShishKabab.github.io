@@ -79,7 +79,7 @@ const Layout = (props: { children: React.ReactNode }) => {
                     </HeaderMenu>
                 </Header>
                 <Main>
-                    <Margin top="largest">{props.children}</Margin>
+                    <Margin vertical="largest">{props.children}</Margin>
                 </Main>
                 <Footer>{/* This is the footer */}</Footer>
             </StyledLayout>
