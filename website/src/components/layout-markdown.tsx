@@ -13,7 +13,6 @@ export default function MarkdownLayout(props: {
     pageContext: any
 }) {
     const { frontmatter } = props.pageContext
-    console.log(props.pageContext)
     return (
         <Layout>
             <Heading level={1} subtext={getPostHeaderSubtext(frontmatter)}>
@@ -45,12 +44,9 @@ export default function MarkdownLayout(props: {
                     if (!props.path.startsWith("/thoughts-in-progress/")) {
                         return child
                     }
-                    console.log(props)
 
                     let key = 0
                     const parsed = parseMdxListRoot(child, () => `${key++}`)
-                    // console.log(parsed)
-                    // return null
                     return <ToggleList children={parsed} />
                 })}
             </MDXProvider>
