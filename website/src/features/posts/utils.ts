@@ -15,11 +15,12 @@ export function getPostsFromQuery(props: any) {
             const { node } = edge
             const { frontmatter } = node
             const createdWhen = new Date(frontmatter.createdWhen)
+            const publishedWhen = new Date(frontmatter.publishedWhen)
             return {
                 createdWhen,
+                publishedWhen,
                 slug: node.slug as string,
                 title: frontmatter.title as string,
-                publishedWhen: frontmatter.publishedWhen as any,
                 preview: frontmatter.preview as string,
             }
         })
