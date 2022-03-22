@@ -1,0 +1,216 @@
+---
+createdWhen: 2022-03-13
+title: Structuring your back-end for rapid iteration
+preview: TBD
+---
+
+import NewsletterLink from "../../components/newsletter-link"
+
+In the previous articles, I described [how scenario replays improve developer and cross-team workflows](https://www.vdenboer.com/blog/scenario-replays/), and started describing [what you need in order to get them in your product](https://www.vdenboer.com/blog/scenario-replays-requirements/). From there, a few requirements emerged for the back-end:
+
+-   **Being able to quickly start the back-end with a clean slate:** every time we start replaying a scenario, we want an empty database, no authenticated users and have any external services (Mailchip, Getstream.io, etc.) also in a clean state. Performance is important here, because we might be loading many instances of the backend in parallel.
+-   **Being able to run multiple instances of the backend in parallel:** if you want to have an overview UI in which you can visually navigate all important workflows in your product, you have to be able to display many instances of your application side by side. A workflow might display a user at a sign-in form and next to it show what the application looks like after a successful sign-in. These two instances of the application should not interfere with each other, neither consume too much resources so it becomes infeasible to run at least 30 parallel instances. The higher the number of possible parallel instances, the better the UX will be when navigating the workflows in the overview UI.
+
+In order to achieve this, we’re going to make a few design choices:
+
+-   **Avoid globals and frameworks that force using them: **a lot of frameworks use globals for increased convenience, allowing you to easily execute database operations from anywhere in your application. Aside from that introducing a lot of unwanted complexity in your codebase (do you know what is really going on and can debug it when you need to?), it also prevents isolation between different instances of the program.
+-   **Make clear boundaries between systems: **it should be easy to swap out certain parts of the system with mocks. For example, if you’re using an external service like Mailchimp, you might want to create a simple mock emulating only the functionality you use. Also, if you set things up right, you can check which functionality offered by your database system you actually use, so you can swap it with an in-memory replacement with improved performance during development.
+
+# Setting up isolated back-end instances
+
+A naive approach to running multiple parallel instances would be to fire up multiple instances of the back-end as separate processes. But, aside from being prohibitively resource hungry, this also gets complicated quickly. Instead, we’ll make a data structure representing a single application instance (with its database connection, auth states, etc.) and choose on a per-request basis which one to use.
+
+```ts
+interface Application {
+    // every instance gets its own ID
+    id: number
+
+    // could be a connection to an actual (No)SQL database,
+    // or an in-memory mock of a database
+    db: any
+
+    // every instance has it's own sessions,
+    // including things like auth state
+    sessionStore: any
+}
+
+interface MetaApplication {
+    applicationCount: number
+    applications: { [id: number]: Application }
+    defaultApplication: Application
+}
+
+function createAppplication(
+    metaApp: Omit<MetaApplication, "defaultApplication">
+) {
+    const id = metaApp.applicationCount++
+    const app: Application = {
+        id,
+        db: createDatabaseConnection(),
+        sessionStore: createSessionStore(),
+    }
+    metaApp.applications[id] = app
+    return app
+}
+
+function createMetaApplication(): MetaApplication {
+    const metaApp: Omit<MetaApplication, "defaultApplication"> = {
+        applicationCount: 0,
+        applications: {},
+    }
+    const defaultApplication = createAppplication(metaApp)
+    return {
+        ...metaApp,
+        defaultApplication,
+    }
+}
+```
+
+Then, we’ll create an endpoint to create a new application instance and get the ID (example using Express):
+
+```ts
+if (process.env.NODE_ENV === "development") {
+    expressApp.post("/app/create", (req, res) => {
+        const app = createAppplication(metaApp)
+        // do any initialization of new app here
+        res.send({ appId: app.id })
+    })
+}
+```
+
+After this, the front-end in development mode is expected to send us the application ID (whether as a header or in the request body.) Using this, we can find the right application instance to work with when handling other requests. If not provided, we’ll just use the default application instance:
+
+```ts
+// This could be moved to an Express middleware
+function getApplication(
+    metaApp: MetaApplication,
+    req: express.Request,
+    res: express.Response
+) {
+    const isDev = process.env.NODE_ENV === "development"
+    const appId = isDev && req.headers["X-Application-ID"]
+    const app = appId ? metaApp.applications[appId] : metaApp.defaultApplication
+    if (app) {
+        return app
+    }
+
+    res.status(403)
+    res.send(`App ID not found: ${appId}`)
+    return null
+}
+
+expressApp.post("/foo", (req, res) => {
+    const app = getApplication(metaApp, req, res)
+    // do something useful with the app
+})
+```
+
+That’s what it all boils down to! Now, when you start your front-end, you can create a new application instance before doing any UI actions (either manually or automatically through scenarios.) And, because you can create multiple application instances in parallel, you can display multiple states of the application in the same window.
+
+**TBD:** Creating new DB instaces
+
+# Centralizing requests to the back-end
+
+Every request to the back-end now requires an application ID attached to it. It may be that there’s one application ID used throughout the entire lifetime. But, when you’re displaying the overview UI containing many isolated instances of your application side by side, each isolated instance needs to make requests to a different application ID.
+
+If you want to support the overview UI, you’ll need to pass down a single function or interface to make back-end requests to different parts of your application that remembers the application ID.
+
+```ts
+type BackendRequester = (url: string, init?: RequestInit) => Promise<Response>
+
+async function main() {
+    const appCreation = await fetch("/app/create")
+    const { appId } = await appCreation.json()
+    const backendRequest: BackendRequester = (url, init?) => {
+        init = init ?? {}
+        init.headers = init.headers ?? {}
+        init.headers["X-Application-ID"] = appId
+        return fetch(url, init)
+    }
+
+    runUI({ backendRequest })
+}
+
+async function runUI(dependencies: { backendRequest: BackendRequester }) {
+    // imagine this function runs your React,
+    // Vue or vanilla JS UI
+    await dependencies.backendRequest("/do/something")
+}
+```
+
+If you don’t need the overview UI, you can make a single function or interface used by the rest of the UI that uses a global application ID.
+
+```ts
+let globalAppId: number
+const backendRequest: BackendRequester = (url, init?) => {
+    init = init ?? {}
+    init.headers = init.headers ?? {}
+    init.headers["X-Application-ID"] = globalAppId
+    return fetch(url, init)
+}
+
+async function main() {
+    const appCreation = await fetch("/app/create")
+    const { appId } = await appCreation.json()
+    globalAppId = appId
+
+    runUI()
+}
+
+async function runUI() {
+    await backendRequest("/do/something")
+}
+```
+
+The trade-off here is that passing down a function or instance to every place that needs it can get messy quickly if you aren’t careful. Using a single function or instance throughout the application that you can use directly might be easier to adopt, while still getting the advantage of scenario replays and increased debuggability (since you can now inspect and modify requests in a single place.)
+
+# Isolating sessions & authentication state
+
+Often, session IDs are stored in (encrypted) cookies, which are then used in the backend to get per-user state, such as which user is currently authenticated. In the overview UI we might display states side by side where different users might be authenticated. So we should be able to send different requests with different session IDs.
+
+The most elegant solution here is to transmit the session IDs through headers instead of cookies in development mode. This way, every UI state can remember its session ID and send it with each individual request instead of it being ‘global state’ as it is with cookies.
+
+This can be done by modifying the above function passed into the UI to remember a session ID:
+
+```ts
+let sessionId: string
+const backendRequest: BackendRequester = async (url, init?) => {
+    init = init ?? {}
+    init.headers = init.headers ?? {}
+    init.headers["X-Application-ID"] = appId
+    if (sessionId) {
+        init.headers["X-Session-ID"] = sessionId
+    }
+    const response = await fetch(url, init)
+    const newSessionId = response.headers["X-Session-ID"]
+    if (newSessionId) {
+        sessionId = newSessionId
+    }
+    return response
+}
+```
+
+In the back-end, we can use this to create and retrieve the session:
+
+```ts
+expressApp.post("/login", (req, res) => {
+    const app = getApplication(metaApp, req, res)
+    const userId = authenticate(app.db, req.body.email, req.body.password)
+    const sessionId = app.sessionStore.createSession({ userId })
+    res.headers["X-Session-ID"] = sessionId
+    res.send("OK")
+})
+
+expressApp.post("/foo", (req, res) => {
+    const app = getApplication(metaApp, req, res)
+    const sessionId = req.headers["X-Session-ID"]
+    const session = app.sessionStore.getSession(sessionId)
+    if (session.userId) {
+        // do something
+    }
+})
+```
+
+# What’s next?
+
+I’ll dive into the most interesting aspects of implementing scenario replays in your product in the _scenario replays and cross-team collaboration_ series. If you want to receive articles as they come out, you can <NewsletterLink>subscribe to the series by joining the mailing list</NewsletterLink>.
