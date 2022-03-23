@@ -23,7 +23,11 @@ export default function MarkdownLayout(props: {
             </Heading>
             <MDXProvider
                 components={{
-                    h1: () => <Heading level={1}>Use H2 instead!</Heading>,
+                    h1: () => {
+                        throw new Error(
+                            `Shouldn't use H1 in Markdown article bodies`
+                        )
+                    },
                     h2: props => <Heading level={2}>{props.children}</Heading>,
                     h3: props => <Heading level={3}>{props.children}</Heading>,
                     p: props => <Paragraph>{props.children}</Paragraph>,

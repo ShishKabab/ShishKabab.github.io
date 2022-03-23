@@ -1,4 +1,4 @@
-import * as path from 'path'
+import * as path from "path"
 
 module.exports = {
     siteMetadata: {
@@ -26,10 +26,13 @@ module.exports = {
         `gatsby-transformer-sharp`,
         `gatsby-plugin-sharp`,
         {
-            resolve: 'gatsby-plugin-mdx',
+            resolve: "gatsby-plugin-mdx",
             options: {
                 defaultLayouts: {
-                    default: path.resolve(__dirname, '../src/components/layout-markdown.tsx')
+                    default: path.resolve(
+                        __dirname,
+                        "../src/components/layout-markdown.tsx"
+                    ),
                 },
                 gatsbyRemarkPlugins: [
                     {
@@ -39,7 +42,7 @@ module.exports = {
                         },
                     },
                 ],
-            }
+            },
         },
         {
             resolve: `gatsby-plugin-manifest`,
@@ -56,7 +59,7 @@ module.exports = {
             options: {
                 // Add any options here
             },
-        }
+        },
         // this (optional) plugin enables Progressive Web App + Offline functionality
         // To learn more, visit: https://gatsby.dev/offline
         // `gatsby-plugin-offline`,

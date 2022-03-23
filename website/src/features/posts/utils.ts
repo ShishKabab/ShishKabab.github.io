@@ -33,19 +33,19 @@ export function getPostsFromQuery(props: any) {
 }
 
 export const allPostsQuery = graphql`
-{
-    allMdx {
-        edges {
-            node {
-                slug
-                frontmatter {
-                    title
-                    preview
-                    createdWhen
-                    publishedWhen
+    {
+        allMdx {
+            edges {
+                node {
+                    slug
+                    frontmatter {
+                        title
+                        preview
+                        createdWhen
+                        publishedWhen
+                    }
                 }
             }
         }
     }
-}
 `

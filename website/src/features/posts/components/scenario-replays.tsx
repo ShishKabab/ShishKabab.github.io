@@ -7,18 +7,15 @@ export function ScenarioReplaysFollowUps(props: { current: string }) {
             posts={[
                 {
                     href: "/blog/scenario-replays",
-                    label:
-                        "Scenario replays and how they improve workflows across teams",
+                    label: "Scenario replays and how they improve workflows across teams",
                 },
                 {
                     href: "/blog/scenario-replays-requirements",
-                    label:
-                        "What you need to get scenario replays in your product",
+                    label: "What you need to get scenario replays in your product",
                 },
                 {
                     href: "/blog/rapid-iteration-backend",
-                    label:
-                        "Structuring your back-end for rapid iteration during development",
+                    label: "Structuring your back-end for rapid iteration during development",
                 },
             ]}
             current={props.current}
