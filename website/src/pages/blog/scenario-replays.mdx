@@ -5,22 +5,22 @@ title: Scenario replays and how they improve workflows across teams
 preview: With the right setup, it becomes possible to replay actions a user might take to jump specific points in a UI. This allows developers to get things done quicker and collaborate more fluidly with designers, QA and other teams.
 ---
 
-import NewsletterLink from "../../components/newsletter-link"
-import AnimationFrames from "../../components/animation-frames"
-import { ScenarioReplaysFollowUps } from "../../features/posts/components/scenario-replays"
+import NewsletterLink from "../../components/newsletter-link";
+import AnimationFrames from "../../components/animation-frames";
+import { ScenarioReplaysFollowUps } from "../../features/posts/components/scenario-replays";
 
 If you’re building software products of non-trivial complexity, you’re probably already doing some form of automated testing. As your product grows, the amount of things you’d have to test before each release quickly becomes unmanageable, which is why we write programs to behave as users would do. However, normally these tests run invisibly and at the end only show us whether they pass or fail. What if instead we could visualize these tests and jump to any position in the program covered by a test and continue interacting manually from there?
 
 <AnimationFrames
-    width={1614}
-    height={1250}
-    frames={[
-        "/2022-02-11-scenario-01-cropped.png",
-        "/2022-02-11-scenario-02-cropped.png",
-        "/2022-02-11-scenario-03-cropped.png",
-        "/2022-02-11-scenario-04-cropped.png",
-        "/2022-02-11-scenario-05-cropped.png",
-    ]}
+  width={1614}
+  height={1250}
+  frames={[
+    "/2022-02-11-scenario-01-cropped.png",
+    "/2022-02-11-scenario-02-cropped.png",
+    "/2022-02-11-scenario-03-cropped.png",
+    "/2022-02-11-scenario-04-cropped.png",
+    "/2022-02-11-scenario-05-cropped.png",
+  ]}
 />
 
 <br />
@@ -51,8 +51,8 @@ Lastly, with some extra work, it’s possible to lay out all the workflows in th
 
 Every product has their unique design challenges and technical constraints, so how you implement scenario replays is highly context dependent. Also, getting the overview UI to run is an extra layer on top of the scenario replays, better suited for a next article. On a high-level, for the scenario replays themselves you’ll need:
 
--   **The ability to start your program with the right pre-conditions:** what data do you need pre-loaded in the database? What users are registered and which one is logged in? Is there anything stored in cookies or local storage?
--   **The ability to replay and record user actions:** this is achieved easiest by centralizing your UI event handling, but can be done in different ways influencing how well your scenarios will keep working as you change your program (you don’t want to be storing CSS selectors and simulating click events for example) and how easy it is to serialize them so you can send and store them.
+- **The ability to start your program with the right pre-conditions:** what data do you need pre-loaded in the database? What users are registered and which one is logged in? Is there anything stored in cookies or local storage?
+- **The ability to replay and record user actions:** this is achieved easiest by centralizing your UI event handling, but can be done in different ways influencing how well your scenarios will keep working as you change your program (you don’t want to be storing CSS selectors and simulating click events for example) and how easy it is to serialize them so you can send and store them.
 
 In order to get the full benefits of scenario replays, you’ll want them to be as performant as possible. If you can get a scenario replay to run in a few milliseconds, it means that during your daily development workflow you can instantly see the results of your changes, while the overview UI can display a lot of your product workflows while still staying responsive.
 
