@@ -73,7 +73,7 @@ function IndexPage(props: any) {
         </Paragraph>
       </IntroBox>
       <BlogBox>
-        <Heading level={1}>Recent blog posts</Heading>
+        <Heading level={1}>Blog posts</Heading>
         <PostList items={blogItems} />
       </BlogBox>
     </Layout>
