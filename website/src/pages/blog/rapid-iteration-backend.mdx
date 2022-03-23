@@ -1,10 +1,12 @@
 ---
 createdWhen: 2022-03-13
-title: Structuring your back-end for rapid iteration
-preview: TBD
+publishedWhen: 2022-03-23
+title: Structuring your back-end for rapid iteration during development
+preview: When developing, it can be very useful to start your back-end in different states with different data sets. If you want to go the next level, you can also go to the next level allowing multiple instances of your back-end to run in the same process, allowing you to display your application in different states at the same time.
 ---
 
 import NewsletterLink from "../../components/newsletter-link"
+import { ScenarioReplaysFollowUps } from "../../features/posts/components/scenario-replays"
 
 In the previous articles, I described [how scenario replays improve developer and cross-team workflows](https://www.vdenboer.com/blog/scenario-replays/), and started describing [what you need in order to get them in your product](https://www.vdenboer.com/blog/scenario-replays-requirements/). From there, a few requirements emerged for the back-end:
 
@@ -16,7 +18,7 @@ In order to achieve this, we’re going to make a few design choices:
 -   **Avoid globals and frameworks that force using them: **a lot of frameworks use globals for increased convenience, allowing you to easily execute database operations from anywhere in your application. Aside from that introducing a lot of unwanted complexity in your codebase (do you know what is really going on and can debug it when you need to?), it also prevents isolation between different instances of the program.
 -   **Make clear boundaries between systems: **it should be easy to swap out certain parts of the system with mocks. For example, if you’re using an external service like Mailchimp, you might want to create a simple mock emulating only the functionality you use. Also, if you set things up right, you can check which functionality offered by your database system you actually use, so you can swap it with an in-memory replacement with improved performance during development.
 
-# Setting up isolated back-end instances
+## Setting up isolated back-end instances
 
 A naive approach to running multiple parallel instances would be to fire up multiple instances of the back-end as separate processes. But, aside from being prohibitively resource hungry, this also gets complicated quickly. Instead, we’ll make a data structure representing a single application instance (with its database connection, auth states, etc.) and choose on a per-request basis which one to use.
 
@@ -107,9 +109,17 @@ expressApp.post("/foo", (req, res) => {
 
 That’s what it all boils down to! Now, when you start your front-end, you can create a new application instance before doing any UI actions (either manually or automatically through scenarios.) And, because you can create multiple application instances in parallel, you can display multiple states of the application in the same window.
 
-**TBD:** Creating new DB instaces
+## Creating clean data sets
 
-# Centralizing requests to the back-end
+The idea is that every application instance has its own database. Every scenario will have its own starting data set and assumptions about what data is stored. Also, the overview UI may be showing entirely different workflows at the same time. How you create these database depends on the specific database you're using.
+
+Personally, I like to use an abstraction over the database that can either talk to a real database or just store, manipulate and query data straight from memory. One example of this might be using an SQL abstraction layer where you can use either PostgreSQL or an in-memory SQLite connection during development. Or, in case of [Storex](https://medium.com/worldbrain/storex-a-modular-and-portable-database-abstraction-ecosystem-for-javascript-c38194335c66) you have a Mongo-like syntax that can be executed in IndexedDB, SQL databases and Firestore, or it can create an in-memory database.
+
+If you're using raw SQL, you might create a new schema for each application and drop them when they're not used anymore. Or when you're using Firestore, you may either use the testing library to create new databases, or just create a new top-level collection for each application instance, under which you nest your normal schema.
+
+Whatever you do, make sure it's fast. Using the Firestore emulator for example, it turned out to be much faster to keep creating new databases, rather than cleaning out all data in the unused ones. In that case, it didn't matter so much, because they aren't persisted to disk anyway.
+
+## Centralizing requests to the back-end
 
 Every request to the back-end now requires an application ID attached to it. It may be that there’s one application ID used throughout the entire lifetime. But, when you’re displaying the overview UI containing many isolated instances of your application side by side, each isolated instance needs to make requests to a different application ID.
 
@@ -164,7 +174,7 @@ async function runUI() {
 
 The trade-off here is that passing down a function or instance to every place that needs it can get messy quickly if you aren’t careful. Using a single function or instance throughout the application that you can use directly might be easier to adopt, while still getting the advantage of scenario replays and increased debuggability (since you can now inspect and modify requests in a single place.)
 
-# Isolating sessions & authentication state
+## Isolating sessions & authentication state
 
 Often, session IDs are stored in (encrypted) cookies, which are then used in the backend to get per-user state, such as which user is currently authenticated. In the overview UI we might display states side by side where different users might be authenticated. So we should be able to send different requests with different session IDs.
 
@@ -211,6 +221,8 @@ expressApp.post("/foo", (req, res) => {
 })
 ```
 
-# What’s next?
+## What’s next?
 
 I’ll dive into the most interesting aspects of implementing scenario replays in your product in the _scenario replays and cross-team collaboration_ series. If you want to receive articles as they come out, you can <NewsletterLink>subscribe to the series by joining the mailing list</NewsletterLink>.
+
+<ScenarioReplaysFollowUps current="/blog/rapid-iteration-backend" />

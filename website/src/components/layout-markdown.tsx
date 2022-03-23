@@ -6,6 +6,7 @@ import Paragraph from "./paragraph"
 import ToggleList, { ToggleListItem } from "./toggle-list"
 import CodeBlock from "./code-block"
 import { getPostHeaderSubtext } from "../utils"
+import SEO from "./seo"
 
 export default function MarkdownLayout(props: {
     children: React.ReactNode
@@ -13,14 +14,16 @@ export default function MarkdownLayout(props: {
     pageContext: any
 }) {
     const { frontmatter } = props.pageContext
+    const { title } = frontmatter
     return (
         <Layout>
+            <SEO title={title} />
             <Heading level={1} subtext={getPostHeaderSubtext(frontmatter)}>
-                {props.pageContext.frontmatter.title}
+                {title}
             </Heading>
             <MDXProvider
                 components={{
-                    h1: props => <Heading level={1}>{props.children}</Heading>,
+                    h1: () => <Heading level={1}>Use H2 instead!</Heading>,
                     h2: props => <Heading level={2}>{props.children}</Heading>,
                     h3: props => <Heading level={3}>{props.children}</Heading>,
                     p: props => <Paragraph>{props.children}</Paragraph>,

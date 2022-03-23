@@ -6,6 +6,7 @@ preview: In the previous article I described how scenario replays improve develo
 ---
 
 import NewsletterLink from "../../components/newsletter-link"
+import { ScenarioReplaysFollowUps } from "../../features/posts/components/scenario-replays"
 
 In [the previous article](/blog/scenario-replays) in this series, I explained what scenario replays are and how they can increase development speed and improve collaboration and communication across teams. Now, it’s time to explain what’s needed to get them to work in a web application assuming a lot of the logic is client side. There’s many variations on this depending on what combination of technologies you’re using. So instead of trying to dive into technology-specific details, I’ll start in this article with a high-level overview.
 
@@ -24,7 +25,7 @@ Then, we’ll need to be able to execute steps. Each step can do any of these th
 -   **Wait for some condition to be met: **you might want to execute this step only once the page is fully loaded, or only some part of it. Or, you started a process in one step, which completes several steps later. An example is an unauthenticated user trying to post a reply, which initiates a login/registration flow, during which the user fills in different fields a clicks submit. The reply submission as a whole waits for this and afterwards you want to show what happens after the reply is successfully submitted.
 -   **Trigger a UI action: **this is where you fill in fields, press buttons, move sliders, etc. automatically. Implicit in this may be that the step knows it’s finished once the UI action finishes, e.g. a button press triggering an async process returning a Javascript promise.
 
-# Describing a scenario
+## Describing a scenario
 
 Now how does this translate to code? There’s a choice to make here. If you choose to write your scenario as code, you’ll have more flexibility in expressing how you want to set up your pre-conditions and what should happen during each step. However, if you want to be able to record scenarios from actual user input (so you can use them to generate links you can attach to bug reports), you’ll want to be able to easily serialize them. In this case, each scenario can be described as a data structure, like JSON. The downside of this is losing the flexibility of code. For every different category of actions you need to take, you now need to write some code that can interpret it. The options here are writing them in code, making them data-driven or a hybrid, each with their own complexity, effort and maintenance trade-offs.
 
@@ -102,7 +103,7 @@ Whereas the same as a data structure might look like this:
 }
 ```
 
-# Getting the scenario to run
+## Getting the scenario to run
 
 Now that you know what to describe in each scenario, you’ll need some way of replaying (and ideally recording) them. The specifics of how to do everything to make that happen depend on your specific codebase and could be nice subjects for future articles. On a high-level you’ll need:
 
@@ -114,8 +115,8 @@ Now that you know what to describe in each scenario, you’ll need some way of r
 -   Bonus: being able to **block and sabotage different parts of your program** to reproduce loading and error states. This might be done by having your entire program as one (nested) object of which you can monkey patch certain parts on the fly.
 -   Bonus: being able to **record and serialize UI actions:** This requires another central point through which all UI actions flow, which receives _serializable actions_ to record and execute. This excludes opaque non-serializable structures, like Redux’ thunks, which are function calls that the program cannot inspect. Instead, you need data like `{ target: ‘todo-list, eventType: ‘deleteItem’, eventArgs: { id: 123 } }`
 
-# What’s next?
+## What’s next?
 
 I’ll dive into the most interesting aspects of some of these complexities one by one as part of the _scenario replays and cross-team collaboration_ series. If you want to receive articles as they come out, you can <NewsletterLink>subscribe to the series by joining the mailing list</NewsletterLink>.
 
-<!-- Also, I’m creating a boilerplate that shows how to integrate all of these concepts and more in a real code setup. I’m still figuring out what it’s price should be, but I’m thinking of €500. Interested? Join the waiting list and send me your feedback and ideas! -->
+<ScenarioReplaysFollowUps current="/blog/scenario-replays-requirements" />

@@ -2,14 +2,14 @@ import { Link } from "gatsby"
 import React from "react"
 import styled from "styled-components"
 import { Margin } from "styled-components-spacing"
-import Heading from "../../components/heading"
+import Heading from "../../../components/heading"
 // import { Link } from "gatsby"
 
-import Layout from "../../components/layout"
-import PageTitle from "../../components/page-title"
-import Paragraph from "../../components/paragraph"
-import Subtitle from "../../components/subititle"
-import { getPostsFromQuery } from "../../features/posts/utils"
+import Layout from "../../../components/layout"
+import PageTitle from "../../../components/page-title"
+import Paragraph from "../../../components/paragraph"
+import Subtitle from "../../../components/subititle"
+import { getPostsFromQuery } from "../../../features/posts/utils"
 
 const ArticleList = styled.div`
     margin-top: calc(${props => props.theme.spacing.large} * 4);
@@ -32,21 +32,32 @@ export const PostIndex = (props: {
             <PageTitle>{props.title}</PageTitle>
             {props.description && <Paragraph>{props.description}</Paragraph>}
             <ArticleList>
-                {items.map(item => {
-                    const published = new Date(item.publishedWhen)
-                    return (
-                        <Margin key={item.slug} bottom="medium">
-                            <PostPreview
-                                slug={item.slug}
-                                title={item.title}
-                                publishedWhen={published}
-                                preview={item.preview}
-                            />
-                        </Margin>
-                    )
-                })}
+                <PostList items={items} />
             </ArticleList>
         </Layout>
+    )
+}
+
+export function PostList(props: {
+    items: ReturnType<typeof getPostsFromQuery>
+}) {
+    const { items } = props
+    return (
+        <>
+            {items.map(item => {
+                const published = new Date(item.publishedWhen)
+                return (
+                    <Margin key={item.slug} bottom="medium">
+                        <PostPreview
+                            slug={item.slug}
+                            title={item.title}
+                            publishedWhen={published}
+                            preview={item.preview}
+                        />
+                    </Margin>
+                )
+            })}
+        </>
     )
 }
 
