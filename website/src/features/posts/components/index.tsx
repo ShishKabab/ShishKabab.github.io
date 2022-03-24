@@ -10,6 +10,7 @@ import PageTitle from "../../../components/page-title";
 import Paragraph from "../../../components/paragraph";
 import Subtitle from "../../../components/subititle";
 import { getPostsFromQuery } from "../../../features/posts/utils";
+import { getPostHeaderSubtext } from "../../../utils";
 
 const ArticleList = styled.div`
   margin-top: calc(${(props) => props.theme.spacing.large} * 4);
@@ -25,6 +26,7 @@ export const PostIndex = (props: {
   path: string;
   title: string;
   description?: React.ReactNode;
+  authorLinks?: boolean;
 }) => {
   const items = getPostsFromQuery(props);
   return (
@@ -32,7 +34,7 @@ export const PostIndex = (props: {
       <PageTitle>{props.title}</PageTitle>
       {props.description && <Paragraph>{props.description}</Paragraph>}
       <ArticleList>
-        <PostList items={items} />
+        <PostList items={items} authorLinks={props.authorLinks} />
       </ArticleList>
     </Layout>
   );
@@ -40,19 +42,22 @@ export const PostIndex = (props: {
 
 export function PostList(props: {
   items: ReturnType<typeof getPostsFromQuery>;
+  authorLinks?: boolean;
+  limit?: number;
 }) {
   const { items } = props;
   return (
     <>
-      {items.map((item) => {
-        const published = new Date(item.publishedWhen);
+      {items.slice(0, props.limit).map((item) => {
         return (
           <Margin key={item.slug} bottom="medium">
             <PostPreview
               slug={item.slug}
               title={item.title}
-              publishedWhen={published}
+              createdWhen={item.createdWhen}
+              publishedWhen={item.publishedWhen}
               preview={item.preview}
+              authorLink={props.authorLinks}
             />
           </Margin>
         );
@@ -61,24 +66,31 @@ export function PostList(props: {
   );
 }
 
-export const PostPreview = (props: {
+function PostPreview(props: {
   slug: string;
   title: string;
-  publishedWhen: Date;
+  createdWhen: string | Date;
+  publishedWhen: string | Date;
   preview: React.ReactNode;
-}) => {
-  const publishedString = props.publishedWhen.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  authorLink?: boolean;
+}) {
   return (
-    <ArticleLink to={`/${props.slug}`}>
-      <Heading level={2} subtext={publishedString}>
-        {props.title}
+    <>
+      <Heading
+        level={2}
+        subtext={getPostHeaderSubtext(
+          {
+            createdWhen: props.createdWhen,
+            publishedWhen: props.publishedWhen,
+          },
+          {
+            authorLink: props.authorLink,
+          }
+        )}
+      >
+        <ArticleLink to={`/${props.slug}`}>{props.title}</ArticleLink>
       </Heading>
       <Paragraph>{props.preview}</Paragraph>
-    </ArticleLink>
+    </>
   );
-};
+}

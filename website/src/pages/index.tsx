@@ -1,6 +1,7 @@
-import { graphql } from "gatsby";
+import { graphql, Link } from "gatsby";
 import React from "react";
 import styled from "styled-components";
+import { Margin } from "styled-components-spacing";
 import ExternalLink from "../components/external-link";
 import Heading from "../components/heading";
 // import { Link } from "gatsby"
@@ -23,6 +24,12 @@ const IntroBox = styled.div`
 `;
 
 const BlogBox = styled.div``;
+const BlogLink = styled(Link)`
+  color: inherit;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: underline;
+`;
 
 function IndexPage(props: any) {
   const blogItems = getPostsFromQuery(props);
@@ -74,7 +81,10 @@ function IndexPage(props: any) {
       </IntroBox>
       <BlogBox>
         <Heading level={1}>Blog posts</Heading>
-        <PostList items={blogItems} />
+        <PostList items={blogItems} limit={3} />
+        <Margin top="large">
+          <BlogLink to="/blog/">All posts &gt;&gt;</BlogLink>
+        </Margin>
       </BlogBox>
     </Layout>
   );

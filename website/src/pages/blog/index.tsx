@@ -3,7 +3,7 @@ import React from "react";
 import { PostIndex } from "../../features/posts/components";
 
 const BlogIndex = (props: any) => {
-  return <PostIndex {...props} title={"Blog"} />;
+  return <PostIndex {...props} title={"Blog"} authorLinks />;
 };
 
 export const query = graphql`

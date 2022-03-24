@@ -1,10 +1,15 @@
 import React from "react";
 import VincentStyle from "./components/vincent-style";
 
-export function getPostHeaderSubtext(frontmatter: {
-  publishedWhen?: string;
-  createdWhen: string;
-}) {
+export function getPostHeaderSubtext(
+  frontmatter: {
+    createdWhen: string | Date;
+    publishedWhen?: string | Date;
+  },
+  options?: {
+    authorLink?: boolean;
+  }
+) {
   const date = new Date(frontmatter.publishedWhen ?? frontmatter.createdWhen);
   const isPublished = !!frontmatter.publishedWhen;
   const dateString = date.toLocaleDateString("en-US", {
@@ -13,7 +18,7 @@ export function getPostHeaderSubtext(frontmatter: {
     month: "long",
     day: "numeric",
   });
-  const author = (
+  const author = options?.authorLink && (
     <>
       by{" "}
       <a href="/">
