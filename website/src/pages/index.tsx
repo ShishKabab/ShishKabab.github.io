@@ -76,7 +76,11 @@ function IndexPage(props: any) {
             {" "}
             Connect with me on Twitter
           </ExternalLink>
-          !
+          ! Or, check out some of my work on{" "}
+          <ExternalLink href="https://github.com/ShishKabab/">
+            {" "}
+            GitHub
+          </ExternalLink>
         </Paragraph>
       </IntroBox>
       <BlogBox>
