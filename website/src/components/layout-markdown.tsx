@@ -18,7 +18,10 @@ export default function MarkdownLayout(props: {
   return (
     <Layout>
       <SEO title={title} />
-      <Heading level={1} subtext={getPostHeaderSubtext(frontmatter)}>
+      <Heading
+        level={1}
+        subtext={getPostHeaderSubtext(frontmatter, { authorLink: true })}
+      >
         {title}
       </Heading>
       <MDXProvider
