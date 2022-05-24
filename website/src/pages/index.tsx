@@ -105,6 +105,7 @@ export const query = graphql`
             preview
             createdWhen
             publishedWhen
+            discoverable
           }
         }
       }

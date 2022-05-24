@@ -9,6 +9,9 @@ export function getPostsFromQuery(props: any) {
       if (!frontmatter?.publishedWhen) {
         return false;
       }
+      if (!(frontmatter.discoverable ?? true)) {
+        return false
+      }
       return ("/" + slug).startsWith(props.path);
     })
     .map((edge) => {
@@ -43,6 +46,7 @@ export const allPostsQuery = graphql`
             preview
             createdWhen
             publishedWhen
+            discoverable
           }
         }
       }

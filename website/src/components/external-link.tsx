@@ -6,8 +6,16 @@ const StyledExternalLink = styled.a`
   color: #333;
 `;
 
-const ExternalLink = (props: { href: string; children: React.ReactNode }) => {
-  return <StyledExternalLink target="_blank" {...props} />;
+const ExternalLink = (props: {
+  href: string;
+  children: React.ReactNode;
+  target?: string | null;
+}) => {
+  let target = props.target;
+  if (!target && target !== null) {
+    target = "_blank";
+  }
+  return <StyledExternalLink {...props} target={target ?? undefined} />;
 };
 
 export default ExternalLink;

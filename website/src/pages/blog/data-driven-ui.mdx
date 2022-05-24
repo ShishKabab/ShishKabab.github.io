@@ -1,0 +1,163 @@
+---
+createdWhen: 2022-05-24
+publishedWhen: 2022-03-24
+discoverable: false
+title: A data-driven UI system
+preview: ""
+---
+
+import EmailMeLink from "../../components/email-me-link";
+
+Front-end development has gone through some important evolutions throughout the years. Over time, we’re evolving to structured approaches that allow our UIs to be organized into reactive, declarative components that can be recombined in consistent ways. We want to write less code, easier for new team members to understand and edit, while keeping the UI fast and visually consistent across often multiple products.
+
+Here, I’d like to propose another logical evolution of this process. Instead of writing our UI in a generic language such as Javascript, we lay out the UI in a data structure which is **a DSL specifically geared towards the things that we do daily when building UIs**. The key part would be that because the data has a structure fitting a narrowed problem set, we can easily transform this into code of varying technologies (such as React) and programming styles.
+
+Here’s a simplified version of what that might look like (expressed in YAML):
+
+```yaml
+types:
+  Group:
+    type: object
+    properties:
+      name: { type: string }
+  GroupList: { type: array, items: { type: Group } }
+homePage:
+  props:
+    userName: { type: string }
+    groups: { type: GroupList }
+  view:
+    tag: div
+    name: container
+    children:
+      - tag: div
+        name: welcome
+        children:
+          - text: Hi
+          - tag: span
+            name: welcomeUser
+            style:
+              fontWeight: bold
+            children:
+              - text: $props.userName
+          - text: "!"
+      - component: userGroups
+        props:
+          groups: $props.groups
+userGroups:
+  props:
+    groups: { type: GroupList }
+  view:
+    tag: div
+    name: groups
+    children:
+      - tag: div
+        name: groupsDescription
+        children:
+          - name: groupsDescriptionText
+            text: "You're part of the following groups:"
+      - tag: ul
+        name: groupList
+        children:
+          - tag: li
+            name: groupName
+            repeat:
+              name: group
+              source: $props.group
+            children:
+              - text: $repeat.group.name
+```
+
+If you’re using React + Typescript with Styled Components, this would be transformed into these presentational components, which you can then use from your stateful components.
+
+```ts
+import React from "react";
+import styled from "styled-components";
+
+export interface Group {
+  name: string;
+}
+export type GroupList = Group[];
+
+export interface HomePageProps {
+  userName: string;
+  groups: GroupList;
+}
+export function HomePage(props: HomePageProps) {
+  return (
+    <div>
+      <div>
+        Welcome <WelcomeUser>{props.userName}</WelcomeUser>!
+      </div>
+      <UserGroups groups={props.groups} />
+    </div>
+  );
+}
+const WelcomeUser = styled.span`
+  font-weight: bold;
+`;
+
+export interface UserGroupsProps {
+  groups: GroupList;
+}
+export function UserGroups(props: UserGroupsProps) {
+  return (
+    <div>
+      <div>You're part of the following groups:</div>
+      <ul>
+        {props.groups.map((group) => (
+          <li>{group.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+Note that there’s enough data to also transform this into React + CSS modules, Vue.js components, Web Components and any other technology you might want to use in your product.
+
+## How this changes UI development
+
+First of all, this way of describing components gives you the opportunity to **express what you want to do in standard, structured ways**, while letting the code generator take care of the sometimes tedious code. It takes away all of the mental load and knowledge transfer solving the same problems repeatedly in slightly different ways like
+
+- Event management, where you might pass down event handlers down a hierarchy of components.
+- Customizations of components down the hierarchy, which can lead to monster components with tons of render logic that only get used by one upstream component.
+- Making sure components are styleable by its users
+
+Also, we can more easily **generate different code during development**. For example, we might want to see all intermediary values calculated while rendering the UI (not only props, but every variable and intermediary values in expressions) in a visually navigable way. Normally, you’d either litter the code with console.log statements or use the debugger, which aside from often not working properly in Javascript, will never be as attuned to the way you want to navigate specific UI-related problems as something that can be designed for that very purpose.
+
+## Impact for Open Source
+
+Since the beginning of the web, common components have been implemented repeatedly in different libraries, frameworks, rendered server-side, client-side, etc. Every different front-end framework prefers components rewritten for that framework. Often, available components don’t expose the required customizability to fit into developers needs.
+
+With a data-driven approach, **the user of a component library can easily modify the exposed components**. They can change the generated DOM, styling, add event listeners, modify conditions of conditionally rendered tags, etc. For the above example, changing a text can be as simple as:
+
+```ts
+getComponentNode({ name: "groupsDescriptionText" }).text =
+  "These are your groups:";
+```
+
+Note the creator of the data component didn't have to write any extra code to get this customizability. Just by properly naming elements, we're able to find and modify them. This means **we don't have to anticipate all the different ways users might want to customize components**.
+
+Also, as noted above, the data structure can be converted to many different types of technologies and methodologies, allowing the user of UI libraries to integrate them into their projects exactly how they want.
+
+## Empowering designers
+
+Because of the specificity of the data structure, static analysis and programmatic modification of the UI suddenly becomes a lot simpler. Aside from visually showing where data being passed into the UI ends up in rendered subcomponents, **tools such as visual editors can be made to edit the CSS directly in the program**.
+
+This finally achieves the dream of your CSS changes in developer tools being saved. The program could understand whether a certain color is a one-off value, or comes from a theme (in which case it can ask you if you want to edit the color for the entire program, or just in this particular place.) Also, it could scan the entire UI for commonly used colors and suggest factoring them out into theme variables. With such a program, developers could create the structure of the UI, while designers can visually finish the look and feel of the program.
+
+Also, **we can scan the entire UI for usages of a certain component, show it in all different contexts** it's being used and see how styling changes affects the component in these contexts at a glance.
+
+Combined with my previous work on scenario replays, this means designers have **always up to date design documentation** that they can restyle without developers being involved.
+
+Lastly, modern products normally work across multiple platforms. Although the above example describes the UI in terms of HTML, one can design a set of shared base components between multiple platforms (say HTML and React Native.) This way, there’s **a single system that can describe the UI for multiple platforms and products, facilitating consistent styling between them**.
+
+## Next steps
+
+I’m actively developing this technology for use within companies I work with. Currently, a Proof of Concept of the compiler and editor is working. This work includes a custom type system, a transformable Typescript AST for code generation and a module that can transform rendered React components to use Styled Components. The system is fast enough so changes made in the editor can be written into the data structure and generated into code in milliseconds, so the changes are visible real-time.
+
+At the time of writing, work is ongoing on more base infrastructure such as using importing components, conditional rendering, event handling, state change propagation and more. The first milestone is being able to express the entirety of Memex’ Web UI using this technology and being able to style it from the editor.
+
+I’d love to make this technology open source. Seeing the projected economical impact however, I’d like to get a fair compensation based on this. Therefore, I’m currently looking for grants that allow me to open source the code generation tool and launch it as a proper open source project with awesome documentation for developers, designers and product owners.
+
+If you or any organization you know are interested in funding this kind of work, <EmailMeLink subject="Data-driven UI">get in touch</EmailMeLink>!
