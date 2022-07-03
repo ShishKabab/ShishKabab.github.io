@@ -71,12 +71,21 @@ function IndexPage(props: any) {
           </ol>
         </Paragraph>
         <Paragraph>
-          Want to talk?{" "}
-          <ExternalLink href="https://twitter.com/vince_d_boer">
-            {" "}
-            Connect with me on Twitter
-          </ExternalLink>
-          ! Or, check out some of my work on{" "}
+          Want to talk?
+          <ul>
+            <li>
+              Connect with me on{" "}
+              <ExternalLink href="https://twitter.com/vince_d_boer">
+                Twitter
+              </ExternalLink>
+              {" or "}
+              <ExternalLink href="https://www.linkedin.com/in/vincent-at-youapt/">
+                LinkedIn
+              </ExternalLink>
+            </li>
+            <li>E-mail me at my first name at youapt dot eu</li>
+          </ul>
+          Or, check out some of my work on{" "}
           <ExternalLink href="https://github.com/ShishKabab/">
             {" "}
             GitHub
