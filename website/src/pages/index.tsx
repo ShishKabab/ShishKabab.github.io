@@ -90,6 +90,7 @@ function IndexPage(props: any) {
             {" "}
             GitHub
           </ExternalLink>
+          .
         </Paragraph>
       </IntroBox>
       <BlogBox>
