@@ -4,16 +4,16 @@ import styled from "styled-components";
 export function CoworkingPics() {
   return <Container>
     <PicContainer>
-      <Pic src="/coworking-1.jpg" />
+      <Pic src="/coworking-1.jpg" alt="Picture of inside" />
       <div style={{ width: '20px' }}></div>
-      <Pic src="/coworking-2.jpg" />
+      <Pic src="/coworking-2.jpg" alt="Picture of terrace" />
     </PicContainer>
     <Caption>Space in progress, eager to evolve</Caption>
   </Container>
 }
 
-function Pic(props: { src: string }) {
-  return <ImageLink href={props.src} target="_blank"><Image src={props.src} /></ImageLink>
+function Pic(props: { src: string, alt: string }) {
+  return <ImageLink href={props.src} target="_blank"><Image src={props.src} alt={props.alt} /></ImageLink>
 }
 
 const Container = styled.div`
