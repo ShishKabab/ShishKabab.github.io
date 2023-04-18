@@ -9,7 +9,6 @@ import Heading from "../components/heading";
 import Layout from "../components/layout";
 import Paragraph from "../components/paragraph";
 import SEO from "../components/seo";
-import VinceStyle from "../components/vincent-style";
 import { PostList } from "../features/posts/components";
 import { getPostsFromQuery } from "../features/posts/utils";
 
@@ -37,9 +36,9 @@ function IndexPage(props: any) {
     <Layout>
       <SEO title="Home" />
       <IntroBox>
-        <Heading>Hey, I'm Vincent</Heading>
+        <Heading>Hi, I'm Vincent</Heading>
         <Paragraph>
-          <VinceStyle>I help people</VinceStyle> and organizations to build
+          <strong>I help people and organizations</strong> to build
           digital products that can continue to adapt quickly as they grow. By
           using the right tools and techniques fitting the context of teams and
           the problems they're solving, I'm obsessed with bringing joy and
@@ -73,6 +72,7 @@ function IndexPage(props: any) {
         <Paragraph>
           Want to talk?
           <ul>
+          <li>Send me an e-mail at <a href="mailto:hello@youapt.eu">hello@youapt.eu</a></li>
             <li>
               Connect with me on{" "}
               <ExternalLink href="https://twitter.com/vince_d_boer">
@@ -83,7 +83,6 @@ function IndexPage(props: any) {
                 LinkedIn
               </ExternalLink>
             </li>
-            <li>E-mail me at my first name at youapt dot eu</li>
           </ul>
           Or, check out some of my work on{" "}
           <ExternalLink href="https://github.com/ShishKabab/">

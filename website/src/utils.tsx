@@ -26,14 +26,7 @@ export function getPostHeaderSubtext(
     month: "long",
     day: "numeric",
   });
-  const author = options?.authorLink && (
-    <>
-      by{" "}
-      <a href="/">
-        <VincentStyle>Vincent den Boer</VincentStyle>
-      </a>
-    </>
-  );
+  const author = options?.authorLink && ""; // kept just in case
 
   let prefix: React.ReactNode = ''
   if (type === 'draft-post') {
@@ -41,7 +34,7 @@ export function getPostHeaderSubtext(
   } else if (type === 'published-post') {
     prefix = <>{dateString}&nbsp;</>
   } else if (type === 'page') {
-    prefix = <>Page&nbsp;</>
+    // prefix = <>Page&nbsp;</>
   }
   return (
     <> {prefix}{author} </>

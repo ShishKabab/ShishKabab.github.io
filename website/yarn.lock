@@ -1373,10 +1373,20 @@
     ts-node "^9"
     tslib "^2"
 
+"@fontsource/karla@^4.5.11":
+  version "4.5.11"
+  resolved "https://registry.yarnpkg.com/@fontsource/karla/-/karla-4.5.11.tgz#5434a77cf11b467046b13ed80be4140c87c42353"
+  integrity sha512-MpH+rW8V5v/mqEwoIrUTmGimY+GIyU5P23DmzYxWcTotosRLGWrg7XOjN4DtkpZuEv2LzHHZxOuFWbjRWL9JfQ==
+
 "@fontsource/lato@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@fontsource/lato/-/lato-4.1.0.tgz#a510e063c50974fe0a3631ec9a8d2fac95d7c50d"
   integrity sha512-AkD7RiL60Cjsp6qVyjEM+X3nGsk1eO4SsNB7yVBADlBR6IogJno7wzZ4vGHbDTGuxge2LV1FR7peBuT95cHifw==
+
+"@fontsource/montserrat@^4.5.14":
+  version "4.5.14"
+  resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-4.5.14.tgz#5f4bfc5e7f234a986d94d9e7e7193f852e6971e3"
+  integrity sha512-fTvrteVzuFUePhr4QYBGoK8G/YHLJ3IhF1HhKg0AxcFvZajJT7rM7ULdmKLSd2PkX44R3aaFZq1zDbmjbGGI+w==
 
 "@fontsource/open-sans@^4.1.0":
   version "4.1.0"

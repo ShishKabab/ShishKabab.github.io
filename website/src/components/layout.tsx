@@ -1,25 +1,19 @@
 import React from "react";
 import styled, { ThemeProvider } from "styled-components";
 
-import "@fontsource/open-sans/300.css";
-import "@fontsource/open-sans/300-italic.css";
-import "@fontsource/open-sans/700.css";
-import "@fontsource/lato/700.css";
+import "@fontsource/karla/300.css";
+import "@fontsource/karla/300-italic.css";
+import "@fontsource/karla/700.css";
 import "../global.css";
 import { THEME } from "../theme";
 import { Margin } from "styled-components-spacing";
+import { Link } from "gatsby";
 
 const StyledLayout = styled.div`
-  font-family: "Open Sans", sans-serif;
+  font-family: "Karla", sans-serif;
   font-size: 16px;
   color: #000;
   line-height: 150%;
-
-  h1,
-  h2,
-  h3 {
-    font-family: "Lato", sans-serif;
-  }
 
   min-height: 100%;
   display: flex;
@@ -35,17 +29,17 @@ const Header = styled.header`
 
 const HeaderLeftArea = styled.div``;
 
-// const HeaderMenu = styled.nav`
-//     flex-grow: 2;
-//     display: flex;
-//     justify-content: flex-end;
-//     padding: 10px 20px;
-// `
+const HeaderMenu = styled.nav`
+    flex-grow: 2;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+`
 
-// const HeaderMenuLink = styled(Link)`
-//     color: #333;
-//     text-decoration: none;
-// `
+const HeaderMenuLink = styled(Link)`
+    color: #333;
+    text-decoration: none;
+`
 
 const Main = styled.main`
   width: 90%;
@@ -65,10 +59,10 @@ const Layout = (props: { children: React.ReactNode }) => {
       <StyledLayout>
         <Header>
           <HeaderLeftArea></HeaderLeftArea>
-          {/* <HeaderMenu>
-                        <HeaderMenuItem to="/">Home</HeaderMenuItem>
-                        <HeaderMenuItem to="/blog">Blog</HeaderMenuItem>
-                    </HeaderMenu> */}
+          <HeaderMenu>
+              <HeaderMenuItem to="/">Home</HeaderMenuItem>
+              <HeaderMenuItem to="/blog">Blog</HeaderMenuItem>
+          </HeaderMenu>
         </Header>
         <Main>
           <Margin vertical="largest">{props.children}</Margin>
@@ -79,12 +73,12 @@ const Layout = (props: { children: React.ReactNode }) => {
   );
 };
 
-// const HeaderMenuItem = (props: { to: string; children: string }) => {
-//     return (
-//         <Margin right="largest">
-//             <HeaderMenuLink to={props.to}>{props.children}</HeaderMenuLink>
-//         </Margin>
-//     )
-// }
+const HeaderMenuItem = (props: { to: string; children: string }) => {
+    return (
+        <Margin right="largest">
+            <HeaderMenuLink to={props.to}>{props.children}</HeaderMenuLink>
+        </Margin>
+    )
+}
 
 export default Layout;

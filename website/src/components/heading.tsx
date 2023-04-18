@@ -1,5 +1,6 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import "@fontsource/montserrat/700.css";
 import {
   DefaultSpacingBreakpoints,
   Margin,
@@ -7,13 +8,19 @@ import {
 } from "styled-components-spacing";
 import Subtitle from "./subititle";
 
+const common = css`
+  font-family: "Montserrat", sans-serif;
+`
+
 const Heading1 = styled.h1`
+  ${common}
   font-size: 1.8em;
   margin: 0;
   line-height: 150%;
 `;
 
 const Heading2 = styled.h2`
+  ${common}
   font-size: 1.4em;
   margin: 0;
   line-height: 150%;
