@@ -34,6 +34,10 @@ const HeaderMenu = styled.nav`
     display: flex;
     justify-content: flex-end;
     padding: 10px 20px;
+
+    @media (max-width: 400px) {
+      justify-content: space-between;
+    }
 `
 
 const HeaderMenuLink = styled(Link)`
@@ -62,6 +66,7 @@ const Layout = (props: { children: React.ReactNode }) => {
           <HeaderMenu>
               <HeaderMenuItem to="/">Home</HeaderMenuItem>
               <HeaderMenuItem to="/blog">Blog</HeaderMenuItem>
+              <HeaderMenuItem to="/work-with-me">Work with Me</HeaderMenuItem>
           </HeaderMenu>
         </Header>
         <Main>

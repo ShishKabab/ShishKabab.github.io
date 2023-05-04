@@ -1,5 +1,4 @@
 import React from "react";
-import VincentStyle from "./components/vincent-style";
 
 export function getPostHeaderSubtext(
   frontmatter: {

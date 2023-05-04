@@ -72,7 +72,8 @@ function IndexPage(props: any) {
         <Paragraph>
           Want to talk?
           <ul>
-          <li>Send me an e-mail at <a href="mailto:hello@youapt.eu">hello@youapt.eu</a></li>
+            <li>Read more about <Link to="/work-with-me/">working with me</Link></li>
+            <li>Send me an e-mail at <a href="mailto:hello@youapt.eu">hello@youapt.eu</a></li>
             <li>
               Connect with me on{" "}
               <ExternalLink href="https://twitter.com/vince_d_boer">
