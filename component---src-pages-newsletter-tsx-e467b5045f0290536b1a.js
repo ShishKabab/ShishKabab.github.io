@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[19],{mpwp:function(n,t,o){"use strict";o.r(t),o.d(t,"default",(function(){return c}));var e=o("dI71"),r=o("q1tI"),i=o.n(r),u=o("xAYJ"),c=function(n){function t(){return n.apply(this,arguments)||this}Object(e.a)(t,n);var o=t.prototype;return o.componentDidMount=function(){window.location.href=u.a},o.render=function(){return i.a.createElement("div",null)},t}(i.a.Component)}}]);
+//# sourceMappingURL=component---src-pages-newsletter-tsx-e467b5045f0290536b1a.js.map
