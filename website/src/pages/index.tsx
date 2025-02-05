@@ -38,7 +38,7 @@ function IndexPage(props: any) {
       <IntroBox>
         <Heading>Hi, I'm Vincent</Heading>
         <Paragraph>
-          <strong>I help people and organizations</strong> to build
+          <strong>I help people and organizations</strong> build
           digital products that can continue to adapt quickly as they grow. By
           using the right tools and techniques fitting the context of teams and
           the problems they're solving, I'm obsessed with bringing joy and
@@ -47,9 +47,8 @@ function IndexPage(props: any) {
         </Paragraph>
         <Paragraph>
           What does that look like? Over the last years, I've helped WorldBrain
-          to build{" "}
-          <ExternalLink href="https://memex.garden/">Memex</ExternalLink>,
-          setting up in such a way that with a 2-developer team we were able to
+          to build <ExternalLink href="https://memex.garden/">Memex</ExternalLink> in
+          such a way that with a 2-developer team we were able to
           <ol>
             <li>
               launch an elegant, simple and privacy-focused multi-client
